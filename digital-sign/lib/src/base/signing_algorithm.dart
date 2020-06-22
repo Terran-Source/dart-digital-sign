@@ -4,6 +4,8 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:digital_sign/src/utils/equality.dart';
+import 'package:digital_sign/src/utils/happy_hash.dart';
+import 'package:digital_sign/src/utils/hash.dart';
 
 part 'key.dart';
 part 'key_pair.dart';
