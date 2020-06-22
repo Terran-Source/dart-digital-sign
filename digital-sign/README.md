@@ -1,8 +1,9 @@
 # digital-sign
 Digital Signature library with asymmetric private-public key cryptography. Hope for a plugin base.
 
-Created from templates made available by Stagehand under a BSD-style
-[license](https://github.com/dart-lang/stagehand/blob/master/LICENSE).
+Created from templates made available by Stagehand
+
+[license](https://github.com/Terran-Source/dart-digital-sign/blob/master/LICENSE).
 
 ## Usage
 
@@ -20,4 +21,4 @@ main() {
 
 Please file feature requests and bugs at the [issue tracker][tracker].
 
-[tracker]: http://example.com/issues/replaceme
+[tracker]: https://github.com/Terran-Source/dart-digital-sign/issues
