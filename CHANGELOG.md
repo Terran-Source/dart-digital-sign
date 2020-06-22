@@ -2,3 +2,4 @@
 - Initial version, created by Stagehand
 - Added community documents
 - base signing_algorithm library
+- introducing happy_hash
