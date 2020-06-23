@@ -13,7 +13,6 @@ part 'signature.dart';
 
 abstract class SigningAlgorithm<PrivateKey extends Key, PublicKey extends Key> {
   const SigningAlgorithm();
-  SigningAlgorithm.from(String key);
 
   String get name;
 
