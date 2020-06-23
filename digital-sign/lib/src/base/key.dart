@@ -24,11 +24,11 @@ abstract class Key {
   Uint8List get parent => _birthMark;
 
   // TODO: implementation of armored
-  static Uint8List armored(Uint8List _bytes, Uint8List _passPhrase) {
-    if (null == _passPhrase) // throw
-      return _bytes;
+  static Uint8List armored(Uint8List bytes, Uint8List passPhrase) {
+    if (null == passPhrase) // throw
+      return bytes;
     else
-      return _bytes;
+      return bytes;
   }
 
   Uint8List _deArmored() {
@@ -84,6 +84,16 @@ class PublicKey extends Key {
     return PublicKey(map['birthMark'], map['key'], map['isArmored']);
   }
 
+  /// A placeholder static function to enable PublicKey.armored().
+  ///
+  /// If [armored] is overridden, it affects [_deArmored], too.
+  static Uint8List armored(Uint8List bytes, Uint8List passPhrase) =>
+      Key.armored(bytes, passPhrase);
+
+  /// Effective implementation in response to change in PublicKey.armored().
+  @override
+  Uint8List _deArmored() => super._deArmored();
+
   @override
   String get boundary => '---## Digital Signing Public Kay ##---';
 
@@ -115,6 +125,16 @@ class PrivateKey extends PublicKey {
 
   factory PrivateKey.random(Uint8List birthMark, int length) =>
       PrivateKey(birthMark, randomBytes(length));
+
+  // A placeholder static function to enable PrivateKey.armored().
+  ///
+  /// If [armored] is overridden, it affects [_deArmored], too.
+  static Uint8List armored(Uint8List bytes, Uint8List passPhrase) =>
+      Key.armored(bytes, passPhrase);
+
+  /// Effective implementation in response to change in PrivateKey.armored().
+  @override
+  Uint8List _deArmored() => super._deArmored();
 
   @override
   String get boundary => '---## Digital Signing Private Kay ##---';

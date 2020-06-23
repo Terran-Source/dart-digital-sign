@@ -17,9 +17,15 @@ abstract class SigningAlgorithm<PrivateKey extends Key, PublicKey extends Key> {
 
   String get name;
 
-  Future<KeyPair<PrivateKey, PublicKey>> generateKeyPair();
+  Future<KeyPair<PrivateKey, PublicKey>> generateKeyPair(
+      {Uint8List passPhrase});
   Future<KeyPair<PrivateKey, PublicKey>> generateKeyPairWithSeed(
-      PrivateKey seed);
+      PrivateKey seed,
+      {Uint8List passPhrase});
+  Future<KeyPair<PrivateKey, PublicKey>> armoredKeyPair(
+      KeyPair<PrivateKey, PublicKey> keyPair, Uint8List passPhrase);
+  Future<PrivateKey> armoredPrivateKey(PrivateKey key, Uint8List passPhrase);
+  Future<PublicKey> armoredPublicKey(PrivateKey key, Uint8List passPhrase);
   Future<Signature> sign(
       Uint8List message, KeyPair<PrivateKey, PublicKey> keyPair);
   Future<bool> verify(List<Uint8List> message, Signature signature);
