@@ -12,6 +12,7 @@ abstract class Key {
   factory Key.fromJson(String jsonString) = PublicKey.fromJson;
 
   bool isArmored;
+  bool get _secureOnly;
 
   Uint8List _passPhrase;
   set passPhrase(Uint8List val) {
@@ -22,6 +23,17 @@ abstract class Key {
   String get boundary;
   Uint8List get extract => _deArmored();
   Uint8List get parent => _birthMark;
+  Uint8List get _secureBytes => ((!_secureOnly) || (_secureOnly && isArmored))
+      ? _bytes
+      : _scramble(_bytes);
+
+  static Uint8List _scramble(Uint8List bytes) {
+    var value = '*** === ***';
+    if (null != bytes) {
+      value = '$value.${encode(bytes).scramble()}.$value';
+    }
+    return decode(value);
+  }
 
   // TODO: implementation of armored
   static Uint8List armored(Uint8List bytes, Uint8List passPhrase) {
@@ -67,7 +79,7 @@ abstract class Key {
 
   Map<String, String> _toJson() => <String, String>{
         'birthMark': encode(_birthMark),
-        'key': _withBoundary(_bytes, boundary),
+        'key': _withBoundary(_secureBytes, boundary),
         'isArmored': isArmored.toString(),
       };
 
@@ -96,6 +108,9 @@ class PublicKey extends Key {
 
   @override
   String get boundary => '---## Digital Signing Public Kay ##---';
+
+  @override
+  bool get _secureOnly => false;
 
   @override
   int get hashCode {
@@ -138,6 +153,9 @@ class PrivateKey extends PublicKey {
 
   @override
   String get boundary => '---## Digital Signing Private Kay ##---';
+
+  @override
+  bool get _secureOnly => true;
 
   @override
   bool operator ==(check) => check is PrivateKey && equals(check);
