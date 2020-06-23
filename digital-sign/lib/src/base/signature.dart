@@ -1,6 +1,6 @@
 part of marganam.signing_algorithm;
 
-class Signature<PublicKey extends Key> {
+class Signature {
   final String algorithm;
   final String key;
   final Uint8List _bytes;
@@ -11,24 +11,25 @@ class Signature<PublicKey extends Key> {
         assert(null != _bytes);
   factory Signature.fromValues(String algorithm, String key, String signature) {
     assert(null != signature);
-    return Signature._(algorithm, key, utf8.encode(signature));
+    return Signature._(algorithm, key, Key.decode(signature));
+  }
+  factory Signature.fromJson(Map<String, String> map) {
+    assert(null != map);
+    return Signature.fromValues(map['algorithm'], map['key'], map['signature']);
   }
   factory Signature.fromString(String extract) {
     assert(null != extract);
-    final Map<String, String> valueMap = json.decode(extract);
-    return Signature.fromValues(
-        valueMap['algorithm'], valueMap['key'], valueMap['signature']);
+    return Signature.fromJson(json.decode(extract));
   }
 
   bool verified(Uint8List check) => _bytes.equals(check);
 
+  Map<String, String> _toJson() => <String, String>{
+        'algorithm': algorithm,
+        'key': key,
+        'signature': Key.encode(_bytes),
+      };
+
   @override
-  String toString() {
-    final valueMap = {
-      'algorithm': algorithm,
-      'signature': utf8.decode(_bytes),
-      'key': key
-    };
-    return json.encode(valueMap);
-  }
+  String toString() => json.encode(_toJson());
 }
