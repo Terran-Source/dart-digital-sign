@@ -20,7 +20,7 @@ abstract class SigningAlgorithm<PrivateKey extends Key, PublicKey extends Key> {
   Future<KeyPair<PrivateKey, PublicKey>> generateKeyPair();
   Future<KeyPair<PrivateKey, PublicKey>> generateKeyPairWithSeed(
       PrivateKey seed);
-  Future<Signature<PublicKey>> sign(
+  Future<Signature> sign(
       Uint8List message, KeyPair<PrivateKey, PublicKey> keyPair);
-  Future<bool> verify(List<Uint8List> message, Signature<PublicKey> signature);
+  Future<bool> verify(List<Uint8List> message, Signature signature);
 }

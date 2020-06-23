@@ -5,20 +5,22 @@ class Signature {
   final String key;
   final Uint8List _bytes;
 
-  Signature._(this.algorithm, this.key, this._bytes)
-      : assert(null != algorithm),
-        assert(null != key),
-        assert(null != _bytes);
+  Signature._(this.algorithm, this.key, this._bytes) {
+    ArgumentError.checkNotNull(algorithm, 'algorithm');
+    ArgumentError.checkNotNull(key, 'key');
+    ArgumentError.checkNotNull(_bytes, 'signature');
+  }
   factory Signature.fromValues(String algorithm, String key, String signature) {
-    assert(null != signature);
+    ArgumentError.checkNotNull(signature, 'signature');
     return Signature._(algorithm, key, Key.decode(signature));
   }
-  factory Signature.fromJson(Map<String, String> map) {
-    assert(null != map);
-    return Signature.fromValues(map['algorithm'], map['key'], map['signature']);
+  factory Signature.fromJson(Map<String, String> json) {
+    ArgumentError.checkNotNull(json, 'json');
+    return Signature.fromValues(
+        json['algorithm'], json['key'], json['signature']);
   }
   factory Signature.fromString(String extract) {
-    assert(null != extract);
+    ArgumentError.checkNotNull(extract, 'json');
     return Signature.fromJson(json.decode(extract));
   }
 

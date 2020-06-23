@@ -3,9 +3,9 @@ part of marganam.signing_algorithm;
 abstract class Key {
   final Uint8List _birthMark;
   final Uint8List _bytes;
-  Key(this._birthMark, this._bytes, [this.isArmored = false])
-      : assert(null != _birthMark),
-        assert(null != _bytes) {
+  Key(this._birthMark, this._bytes, [this.isArmored = false]) {
+    ArgumentError.checkNotNull(_birthMark, 'birthMark');
+    ArgumentError.checkNotNull(_bytes, 'bytes');
     isArmored = isArmored ?? false;
   }
 
@@ -15,7 +15,7 @@ abstract class Key {
 
   Uint8List _passPhrase;
   set passPhrase(Uint8List val) {
-    assert(null != val);
+    ArgumentError.checkNotNull(val, 'passPhrase');
     _passPhrase = val;
   }
 
@@ -52,7 +52,7 @@ abstract class Key {
   static Uint8List _stripBoundary(String value) {
     if (null == value) return null;
     var cleansed = value.split(RegExp(r'\n', multiLine: true));
-    return utf8.encode(cleansed[1]);
+    return decode(cleansed[1]);
   }
 
   static Map<String, dynamic> _fromJson(String jsonString) {
@@ -93,7 +93,7 @@ class PublicKey extends Key {
     final baseBirth = base64Encode(_birthMark);
     final md5Hash =
         hashedAll([base, baseBirth], hashLength: 16, library: HashLibrary.md5);
-    final intList = utf8.encode(md5Hash);
+    final intList = Key.decode(md5Hash);
     return intList.hash();
   }
 
