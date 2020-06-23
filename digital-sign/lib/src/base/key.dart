@@ -37,10 +37,12 @@ abstract class Key {
 
   // TODO: implementation of armored
   static Uint8List armored(Uint8List bytes, Uint8List passPhrase) {
-    if (null == passPhrase) // throw
+    if (null == passPhrase) {
+      // throw
       return bytes;
-    else
+    } else {
       return bytes;
+    }
   }
 
   Uint8List _deArmored() {
