@@ -3,42 +3,86 @@ part of marganam.signing_algorithm;
 abstract class Key {
   final Uint8List _birthMark;
   final Uint8List _bytes;
-  const Key(this._birthMark, this._bytes)
+  Key(this._birthMark, this._bytes, [this.isArmored = false])
       : assert(null != _birthMark),
-        assert(null != _bytes);
-
-  Uint8List armored();
-  String get boundary;
-  Uint8List get extract;
-  Uint8List get parent => _birthMark;
-
-  static Uint8List fromString(String value) {
-    if (null == value) return null;
-    var cleansed = value.split(RegExp(r'\n', multiLine: true));
-    return utf8.encode(cleansed[1]);
+        assert(null != _bytes) {
+    isArmored = isArmored ?? false;
   }
 
-  @override
-  String toString() => '$boundary\n${utf8.decode(armored())}\n$boundary';
-}
+  factory Key.fromJson(String jsonString) = PublicKey.fromJson;
 
-class PublicKey extends Key {
-  PublicKey(Uint8List birthMark, Uint8List bytes) : super(birthMark, bytes);
+  bool isArmored;
 
   Uint8List _passPhrase;
-
   set passPhrase(Uint8List val) {
     assert(null != val);
     _passPhrase = val;
   }
 
-  @override
-  Uint8List armored() => _bytes;
-
-  Uint8List _deArmored() => (null == _passPhrase) ? _bytes : _bytes;
-
-  @override
+  String get boundary;
   Uint8List get extract => _deArmored();
+  Uint8List get parent => _birthMark;
+
+  // TODO: implementation of armored
+  static Uint8List armored(Uint8List _bytes, Uint8List _passPhrase) {
+    if (null == _passPhrase) // throw
+      return _bytes;
+    else
+      return _bytes;
+  }
+
+  Uint8List _deArmored() {
+    if (isArmored) {
+      // TODO: implementation of de-armored
+      return (null == _passPhrase)
+          ? _bytes // throw
+          : _bytes;
+    }
+    return _bytes;
+  }
+
+  static String encode(Uint8List value) => utf8.decode(value);
+  static Uint8List decode(String value) => utf8.encode(value);
+
+  static String _withBoundary(Uint8List value, String boundary) {
+    if (null == value) return null;
+    return '$boundary\n${encode(value)}\n$boundary';
+  }
+
+  static Uint8List _stripBoundary(String value) {
+    if (null == value) return null;
+    var cleansed = value.split(RegExp(r'\n', multiLine: true));
+    return utf8.encode(cleansed[1]);
+  }
+
+  static Map<String, dynamic> _fromJson(String jsonString) {
+    if (null == jsonString) return null;
+    final Map<String, dynamic> map = json.decode(jsonString);
+    return <String, dynamic>{
+      'birthMark': decode(map['birthMark']),
+      'key': _stripBoundary(map['key']),
+      'isArmored': true.toString() == map['isArmored'],
+    };
+  }
+
+  Map<String, String> _toJson() => <String, String>{
+        'birthMark': encode(_birthMark),
+        'key': _withBoundary(_bytes, boundary),
+        'isArmored': isArmored.toString(),
+      };
+
+  @override
+  String toString() => json.encode(_toJson());
+}
+
+class PublicKey extends Key {
+  PublicKey(Uint8List birthMark, Uint8List bytes, [bool isArmored])
+      : super(birthMark, bytes, isArmored);
+
+  factory PublicKey.fromJson(String jsonString) {
+    final map = Key._fromJson(jsonString);
+    return PublicKey(map['birthMark'], map['key'], map['isArmored']);
+  }
 
   @override
   String get boundary => '---## Digital Signing Public Kay ##---';
@@ -53,12 +97,21 @@ class PublicKey extends Key {
     return intList.hash();
   }
 
+  bool equals(check) =>
+      parent.equals(check.parent) && extract.equals(check.extract);
+
   @override
-  bool operator ==(check) => check is PublicKey && _bytes.equals(check.extract);
+  bool operator ==(check) => check is PublicKey && equals(check);
 }
 
 class PrivateKey extends PublicKey {
-  PrivateKey(Uint8List birthMark, Uint8List bytes) : super(birthMark, bytes);
+  PrivateKey(Uint8List birthMark, Uint8List bytes, [bool isArmored])
+      : super(birthMark, bytes, isArmored);
+
+  factory PrivateKey.fromJson(String jsonString) {
+    final map = Key._fromJson(jsonString);
+    return PrivateKey(map['birthMark'], map['key'], map['isArmored']);
+  }
 
   factory PrivateKey.random(Uint8List birthMark, int length) =>
       PrivateKey(birthMark, randomBytes(length));
@@ -67,8 +120,5 @@ class PrivateKey extends PublicKey {
   String get boundary => '---## Digital Signing Private Kay ##---';
 
   @override
-  bool operator ==(check) =>
-      check is PrivateKey &&
-      _birthMark.equals(check.parent) &&
-      _bytes.equals(check.extract);
+  bool operator ==(check) => check is PrivateKey && equals(check);
 }
