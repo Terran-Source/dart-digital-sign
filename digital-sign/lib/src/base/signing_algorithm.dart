@@ -5,7 +5,7 @@ import 'dart:typed_data';
 
 import 'package:digital_sign/src/hash/hash.dart';
 import 'package:digital_sign/src/random/random.dart';
-import 'package:digital_sign/src/utils/converter.dart';
+import 'package:digital_sign/src/utils/byte_converter.dart';
 import 'package:digital_sign/src/utils/equality.dart';
 import 'package:digital_sign/src/utils/scrambler.dart';
 

@@ -30,9 +30,9 @@ abstract class Key {
   static Uint8List _scramble(Uint8List bytes) {
     var value = '*** === ***';
     if (null != bytes) {
-      value = '$value.${encode(bytes).scramble()}.$value';
+      value = '$value.${encodeString(bytes).scramble()}.$value';
     }
-    return decode(value);
+    return decodeString(value);
   }
 
   // TODO: implementation of armored
@@ -55,34 +55,34 @@ abstract class Key {
     return _bytes;
   }
 
-  static String encode(Uint8List value) => value.encodeString();
-  static Uint8List decode(String value) => value.encodeBytes();
+  static String encodeString(Uint8List value) => value.encodeString();
+  static Uint8List decodeString(String value) => value.encodeBytes();
   static String encodeHex(Uint8List value) => value.encodeHexString();
   static Uint8List decodeHex(String value) => value.encodeHexBytes();
 
   static String _withBoundary(Uint8List value, String boundary) {
     if (null == value) return null;
-    return '$boundary\n${encode(value)}\n$boundary';
+    return '$boundary\n${encodeString(value)}\n$boundary';
   }
 
   static Uint8List _stripBoundary(String value) {
     if (null == value) return null;
     var cleansed = value.split(RegExp(r'\n', multiLine: true));
-    return decode(cleansed[1]);
+    return decodeString(cleansed[1]);
   }
 
   static Map<String, dynamic> _fromJson(String jsonString) {
     if (null == jsonString) return null;
     final Map<String, dynamic> map = json.decode(jsonString);
     return <String, dynamic>{
-      'birthMark': decode(map['birthMark']),
+      'birthMark': decodeString(map['birthMark']),
       'key': _stripBoundary(map['key']),
       'isArmored': true.toString() == map['isArmored'],
     };
   }
 
   Map<String, String> _toJson() => <String, String>{
-        'birthMark': encode(_birthMark),
+        'birthMark': encodeString(_birthMark),
         'key': _withBoundary(_secureBytes, boundary),
         'isArmored': isArmored.toString(),
       };
@@ -122,7 +122,7 @@ class PublicKey extends Key {
     final baseBirth = base64Encode(_birthMark);
     final md5Hash =
         hashedAll([base, baseBirth], hashLength: 16, library: HashLibrary.md5);
-    final intList = Key.decode(md5Hash);
+    final intList = Key.decodeString(md5Hash);
     return intList.hash();
   }
 

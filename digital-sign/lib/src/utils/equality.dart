@@ -1,3 +1,5 @@
+library marganam.equality;
+
 extension IntListEquality on List<int> {
   bool equals(List<int> check) {
     if (this == null || check == null || length != check.length) {

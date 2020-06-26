@@ -1,3 +1,5 @@
+library marganam.scrambler;
+
 extension StringScrambler on String {
   String scramble({int maxLength = 5, String extender = '...'}) {
     var value = '*** === ***';

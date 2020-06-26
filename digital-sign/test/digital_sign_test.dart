@@ -3,14 +3,16 @@ import 'package:test/test.dart';
 
 void main() {
   group('A group of tests', () {
-    Awesome awesome;
+    PrivateKey privateKey;
 
     setUp(() {
-      awesome = Awesome();
+      privateKey =
+          PrivateKey.random(Key.decodeString(DateTime.now().toString()), 32);
+      ;
     });
 
     test('First Test', () {
-      expect(awesome.isAwesome, isTrue);
+      expect(privateKey.isArmored, isFalse);
     });
   });
 }

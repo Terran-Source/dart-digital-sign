@@ -12,7 +12,7 @@ class Signature {
   }
   factory Signature.fromValues(String algorithm, String key, String signature) {
     ArgumentError.checkNotNull(signature, 'signature');
-    return Signature._(algorithm, key, Key.decode(signature));
+    return Signature._(algorithm, key, Key.decodeString(signature));
   }
   factory Signature.fromJson(Map<String, String> json) {
     ArgumentError.checkNotNull(json, 'json');
@@ -29,7 +29,7 @@ class Signature {
   Map<String, String> _toJson() => <String, String>{
         'algorithm': algorithm,
         'key': key,
-        'signature': Key.encode(_bytes),
+        'signature': Key.encodeString(_bytes),
       };
 
   @override

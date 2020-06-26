@@ -9,9 +9,10 @@ extension IterableIntConverter on Iterable<int> {
 }
 
 extension StringConverter on String {
-  Uint8List encodeBytes() => utf8.encode(this);
-  Uint8List encodeUint16() => this.codeUnits;
-  Uint8List encodeHexBytes() => this.split(r'\s').map(_HexToInt);
+  Uint8List encodeBytes() => Uint8List.fromList(utf8.encode(this));
+  Uint8List encodeUint16() => Uint8List.fromList(this.codeUnits);
+  Uint8List encodeHexBytes() =>
+      Uint8List.fromList(this.split(r'\s').map(_HexToInt));
 }
 
 String _IntToHex(int val, {bool withPrefix = true}) {
