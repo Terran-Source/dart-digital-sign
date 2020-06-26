@@ -1,8 +1,10 @@
 extension StringScrambler on String {
-  String scramble() {
+  String scramble({int maxLength = 5, String extender = '...'}) {
     var value = '*** === ***';
     if (null != this) {
-      value = '$value. ${this.reduce()} .$value';
+      value = '$value. '
+          '${this.reduce(maxLength: maxLength, extender: extender)}'
+          ' .$value';
     }
     return value;
   }

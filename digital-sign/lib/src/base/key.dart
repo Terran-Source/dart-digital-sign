@@ -55,8 +55,10 @@ abstract class Key {
     return _bytes;
   }
 
-  static String encode(Uint8List value) => utf8.decode(value);
-  static Uint8List decode(String value) => utf8.encode(value);
+  static String encode(Uint8List value) => value.encodeString();
+  static Uint8List decode(String value) => value.encodeBytes();
+  static String encodeHex(Uint8List value) => value.encodeHexString();
+  static Uint8List decodeHex(String value) => value.encodeHexBytes();
 
   static String _withBoundary(Uint8List value, String boundary) {
     if (null == value) return null;
@@ -93,8 +95,8 @@ class PublicKey extends Key {
   PublicKey(Uint8List birthMark, Uint8List bytes, [bool isArmored])
       : super(birthMark, bytes, isArmored);
 
-  factory PublicKey.fromJson(String jsonString) {
-    final map = Key._fromJson(jsonString);
+  factory PublicKey.fromJson(String json) {
+    final map = Key._fromJson(json);
     return PublicKey(map['birthMark'], map['key'], map['isArmored']);
   }
 
@@ -135,8 +137,8 @@ class PrivateKey extends PublicKey {
   PrivateKey(Uint8List birthMark, Uint8List bytes, [bool isArmored])
       : super(birthMark, bytes, isArmored);
 
-  factory PrivateKey.fromJson(String jsonString) {
-    final map = Key._fromJson(jsonString);
+  factory PrivateKey.fromJson(String json) {
+    final map = Key._fromJson(json);
     return PrivateKey(map['birthMark'], map['key'], map['isArmored']);
   }
 

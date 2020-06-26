@@ -3,6 +3,7 @@ library marganam.signing_algorithm;
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:digital_sign/src/utils/converter.dart';
 import 'package:digital_sign/src/utils/equality.dart';
 import 'package:digital_sign/src/utils/happy_hash.dart';
 import 'package:digital_sign/src/utils/hash.dart';
