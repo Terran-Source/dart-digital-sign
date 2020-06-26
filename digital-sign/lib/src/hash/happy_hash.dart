@@ -1,10 +1,10 @@
 library marganam.happy_hash;
 
 import 'dart:convert';
-import 'dart:math';
-import 'dart:typed_data';
 import 'package:crypto/crypto.dart';
 import 'package:convert/convert.dart';
+
+import 'package:digital_sign/src/random/random.dart';
 
 enum HashLibrary {
   md5,
@@ -20,8 +20,6 @@ enum HashLibrary {
   hmac_sha384,
   hmac_sha512
 }
-
-final Random _random = Random.secure();
 
 String hashedAll(
   List<String> items, {
@@ -111,9 +109,3 @@ String hashed(
       key: key,
       prefixLibrary: prefixLibrary,
     );
-
-String randomString([int length = 16]) =>
-    base64Encode(randomBytes(length)).substring(0, length);
-
-Uint8List randomBytes([int length = 16]) =>
-    List<int>.generate(length, (index) => _random.nextInt(256));
