@@ -27,13 +27,8 @@ abstract class Key {
       ? _bytes
       : _scramble(_bytes);
 
-  static Uint8List _scramble(Uint8List bytes) {
-    var value = '*** === ***';
-    if (null != bytes) {
-      value = '$value.${encodeString(bytes).scramble()}.$value';
-    }
-    return decodeString(value);
-  }
+  static Uint8List _scramble(Uint8List bytes) =>
+      decodeString(((null == bytes) ? '' : encodeString(bytes)).scramble());
 
   // TODO: implementation of armored
   static Uint8List armored(Uint8List bytes, Uint8List passPhrase) {
