@@ -50,9 +50,11 @@ abstract class Key {
     return _bytes;
   }
 
-  static String encodeString(Uint8List value) => value.encodeString();
-  static Uint8List decodeString(String value) => value.encodeBytes();
-  static String encodeHex(Uint8List value) => value.encodeHexString();
+  static String encodeString(Uint8List value) =>
+      value.encodedString(); //.encodeString();
+  static Uint8List decodeString(String value) =>
+      value.encodedBytes(); //.encodeBytes();
+  static String encodeHex(Uint8List value) => value.encodeByteHexString();
   static Uint8List decodeHex(String value) => value.encodeHexBytes();
 
   static String _withBoundary(Uint8List value, String boundary) {
