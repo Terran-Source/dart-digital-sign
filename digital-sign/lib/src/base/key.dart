@@ -131,6 +131,11 @@ class PublicKey extends Key {
 }
 
 class PrivateKey extends PublicKey {
+  static final List<int> supportedLength =
+      List<int>.generate(5, (index) => pow(2, 8 + index));
+  static String get _unsupportedMessage => 'Key length not supported. '
+      'Must be one of ${supportedLength.join(', ')}';
+
   PrivateKey(Uint8List birthMark, Uint8List bytes, [bool isArmored])
       : super(birthMark, bytes, isArmored);
 
@@ -139,8 +144,12 @@ class PrivateKey extends PublicKey {
     return PrivateKey(map['birthMark'], map['key'], map['isArmored']);
   }
 
-  factory PrivateKey.random(Uint8List birthMark, int length) =>
-      PrivateKey(birthMark, randomBytes(length));
+  factory PrivateKey.random(Uint8List birthMark, int bitsLength) {
+    if (supportedLength.any((element) => element == bitsLength)) {
+      return PrivateKey(birthMark, randomBytes(bitsLength ~/ 8));
+    }
+    throw ArgumentError.value(bitsLength, 'bitsLength', _unsupportedMessage);
+  }
 
   // A placeholder static function to enable PrivateKey.armored().
   ///
