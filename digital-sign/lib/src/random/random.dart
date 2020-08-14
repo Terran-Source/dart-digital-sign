@@ -1,1 +1,2 @@
-export 'random_base.dart' if (dart.library.html) 'random_web.dart';
+export 'random_base.dart';
+export 'random_bytes.dart';
