@@ -15,6 +15,8 @@ part 'nonce.dart';
 abstract class Cipher {
   const Cipher();
 
+  String get name;
+
   Future<Uint8List> encrypt<T>(
     Uint8List data, {
     @required Nonce secret,
