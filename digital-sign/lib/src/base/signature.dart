@@ -10,8 +10,11 @@ class Signature {
     ArgumentError.checkNotNull(key, 'key');
     ArgumentError.checkNotNull(_bytes, 'signature');
   }
+  factory Signature.fromBytes(
+      String algorithm, String key, Uint8List signature) {
+    return Signature._(algorithm, key, signature);
+  }
   factory Signature.fromValues(String algorithm, String key, String signature) {
-    ArgumentError.checkNotNull(signature, 'signature');
     return Signature._(algorithm, key, Key.decodeString(signature));
   }
   factory Signature.fromJson(Map<String, String> json) {

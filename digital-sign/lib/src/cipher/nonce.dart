@@ -22,6 +22,8 @@ class Nonce {
     return Nonce(timedString.encodeBytes());
   }
 
+  Uint8List extract() => bytes;
+
   @override
   int get hashCode => bytes.hash();
 
