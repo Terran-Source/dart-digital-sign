@@ -1,11 +1,11 @@
 part of marganam.signing_algorithm;
 
-abstract class Key {
+abstract class Key extends Bytes {
   final Uint8List _birthMark;
-  final Uint8List _bytes;
-  Key(this._birthMark, this._bytes, [this.isArmored = false]) {
+  Key(this._birthMark, Uint8List bytes, [this.isArmored = false])
+      : super(bytes) {
     ArgumentError.checkNotNull(_birthMark, 'birthMark');
-    ArgumentError.checkNotNull(_bytes, 'bytes');
+    // ArgumentError.checkNotNull(bytes, 'bytes');
     isArmored = isArmored ?? false;
   }
 
@@ -21,6 +21,8 @@ abstract class Key {
   }
 
   String get boundary;
+  Uint8List get _bytes => super.extract;
+  @override
   Uint8List get extract => _deArmored();
   Uint8List get parent => _birthMark;
   Uint8List get _secureBytes => ((!_secureOnly) || (_secureOnly && isArmored))

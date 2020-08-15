@@ -17,7 +17,7 @@ class Bytes {
       : assert(value?.isNotEmpty ?? false),
         _bytes = value.encodedBytes();
 
-  Uint8List extract() => _bytes;
+  Uint8List get extract => _bytes;
 
   @override
   int get hashCode => _bytes.hash();
