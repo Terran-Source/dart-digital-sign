@@ -3,7 +3,10 @@ library marganam.byte_converter;
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:meta/meta.dart';
+
 extension IterableIntConverter on Iterable<int> {
+  @experimental
   String encodeString() => utf8.decode(this); // TODO
   String encodedString() => String.fromCharCodes(this);
   String encodeHexString() => this.map(_IntToHex).join(' ');
@@ -16,6 +19,7 @@ extension IterableIntConverter on Iterable<int> {
 }
 
 extension StringConverter on String {
+  @experimental
   Uint8List encodeBytes() => Uint8List.fromList(utf8.encode(this)); // TODO
   Uint8List encodedBytes() => this.codeUnits.toByteList();
   Uint16List encodeUint16() => Uint16List.fromList(this.codeUnits);

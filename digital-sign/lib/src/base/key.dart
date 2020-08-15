@@ -41,9 +41,9 @@ abstract class Key extends Bytes {
     }
   }
 
+  // TODO: implementation of de-armored
   Uint8List _deArmored() {
     if (isArmored) {
-      // TODO: implementation of de-armored
       return (null == _passPhrase)
           ? _bytes // throw
           : _bytes;
