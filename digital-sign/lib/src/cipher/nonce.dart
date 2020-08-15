@@ -1,29 +1,21 @@
 part of marganam.cipher;
 
-class Nonce {
-  final Uint8List bytes;
+class Nonce extends Bytes {
+  Nonce(Uint8List bytes) : super(bytes);
 
-  Nonce(this.bytes) {
-    ArgumentError.checkNotNull(bytes, 'bytes');
-  }
+  Nonce.random([int length = 16]) : super.random(length);
 
-  factory Nonce.random([int length = 16]) => Nonce(randomBytes(length));
+  Nonce.timedRandom([int length = 32])
+      : assert(length >= 32),
+        super.timedRandom(length);
 
-  factory Nonce.timedRandom([int length = 16]) {
-    final timedString =
-        '${DateTime.now().toUtc().microString}${randomString(length)}';
+  Nonce.fromString(String value)
+      : assert(isNonceString(value)),
+        super.fromString(value.split(':')[1]);
 
-    return Nonce(timedString.encodeBytes());
-  }
-
-  Uint8List extract() => bytes;
+  static bool isNonceString(String value) =>
+      (value?.isNotEmpty ?? false) && value.startsWith('Nonce:');
 
   @override
-  int get hashCode => bytes.hash();
-
-  @override
-  bool operator ==(check) => check is Nonce && bytes.equals(check.bytes);
-
-  @override
-  String toString() => bytes.encodeString();
+  String toString() => 'Nonce:${super.toString()}';
 }

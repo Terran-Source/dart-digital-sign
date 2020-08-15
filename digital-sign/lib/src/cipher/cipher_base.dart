@@ -7,9 +7,9 @@ import 'package:meta/meta.dart';
 import 'package:digital_sign/src/hash/hash.dart';
 import 'package:digital_sign/src/random/random.dart';
 import 'package:digital_sign/src/utils/byte_converter.dart';
-import 'package:digital_sign/src/utils/datetime_extensions.dart';
 import 'package:digital_sign/src/utils/equality.dart';
 
+part 'bytes.dart';
 part 'nonce.dart';
 
 abstract class Cipher {
@@ -19,7 +19,7 @@ abstract class Cipher {
 
   Future<Uint8List> encrypt<T>(
     Uint8List data, {
-    @required Nonce secret,
+    @required Bytes secret,
     Nonce nonce,
     T support,
   }) async =>
@@ -32,7 +32,7 @@ abstract class Cipher {
 
   Uint8List encryptSync<T>(
     Uint8List data, {
-    @required Nonce secret,
+    @required Bytes secret,
     Nonce nonce,
     T support,
   });
@@ -41,7 +41,7 @@ abstract class Cipher {
     Uint8List data, {
     @required Uint8List buffer,
     int bufferIndex = 0,
-    @required Nonce secret,
+    @required Bytes secret,
     Nonce nonce,
     T support,
   }) async {
@@ -60,7 +60,7 @@ abstract class Cipher {
     Uint8List data, {
     @required Uint8List buffer,
     int bufferIndex = 0,
-    @required Nonce secret,
+    @required Bytes secret,
     Nonce nonce,
     T support,
   }) {
@@ -77,7 +77,7 @@ abstract class Cipher {
 
   Future<Uint8List> decrypt<T>(
     Uint8List data, {
-    @required Nonce secret,
+    @required Bytes secret,
     Nonce nonce,
     T support,
   }) async =>
@@ -90,7 +90,7 @@ abstract class Cipher {
 
   Uint8List decryptSync<T>(
     Uint8List data, {
-    @required Nonce secret,
+    @required Bytes secret,
     Nonce nonce,
     T support,
   });
@@ -99,7 +99,7 @@ abstract class Cipher {
     Uint8List data, {
     @required Uint8List buffer,
     int bufferIndex = 0,
-    @required Nonce secret,
+    @required Bytes secret,
     Nonce nonce,
     T support,
   }) async {
@@ -118,7 +118,7 @@ abstract class Cipher {
     Uint8List data, {
     @required Uint8List buffer,
     int bufferIndex = 0,
-    @required Nonce secret,
+    @required Bytes secret,
     Nonce nonce,
     T support,
   }) {
