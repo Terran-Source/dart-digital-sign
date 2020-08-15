@@ -5,7 +5,6 @@ abstract class Key extends Bytes {
   Key(this._birthMark, Uint8List bytes, [this.isArmored = false])
       : super(bytes) {
     ArgumentError.checkNotNull(_birthMark, 'birthMark');
-    // ArgumentError.checkNotNull(bytes, 'bytes');
     isArmored = isArmored ?? false;
   }
 
@@ -52,10 +51,8 @@ abstract class Key extends Bytes {
     return _bytes;
   }
 
-  static String encodeString(Uint8List value) =>
-      value.encodedString(); //.encodeString();
-  static Uint8List decodeString(String value) =>
-      value.encodedBytes(); //.encodeBytes();
+  static String encodeString(Uint8List value) => value.encodedString();
+  static Uint8List decodeString(String value) => value.encodedBytes();
   static String encodeHex(Uint8List value) => value.encodeByteHexString();
   static Uint8List decodeHex(String value) => value.encodeHexBytes();
 
