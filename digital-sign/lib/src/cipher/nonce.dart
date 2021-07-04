@@ -1,25 +1,21 @@
-import 'dart:typed_data';
+part of marganam.cipher;
 
-import 'package:digital_sign/src/hash/hash.dart';
-import 'package:digital_sign/src/random/random.dart';
-import 'package:digital_sign/src/utils/byte_converter.dart';
-import 'package:digital_sign/src/utils/equality.dart';
+class Nonce extends Bytes {
+  Nonce(Uint8List bytes) : super(bytes);
 
-class Nonce {
-  final Uint8List bytes;
+  Nonce.random([int length = 16]) : super.random(length);
 
-  Nonce(this.bytes) {
-    ArgumentError.checkNotNull(bytes, 'bytes');
-  }
+  Nonce.timedRandom([int length = 32])
+      : assert(length >= 32),
+        super.timedRandom(length);
 
-  factory Nonce.random([int length = 16]) => Nonce(randomBytes(length));
+  Nonce.fromString(String value)
+      : assert(isNonceString(value)),
+        super.fromString(value.split(':')[1]);
 
-  @override
-  int get hashCode => bytes.hash();
-
-  @override
-  bool operator ==(check) => check is Nonce && bytes.equals(check.bytes);
+  static bool isNonceString(String value) =>
+      (value?.isNotEmpty ?? false) && value.startsWith('Nonce:');
 
   @override
-  String toString() => bytes.encodeString();
+  String toString() => 'Nonce:${super.toString()}';
 }

@@ -1,11 +1,10 @@
 part of marganam.signing_algorithm;
 
-abstract class Key {
+abstract class Key extends Bytes {
   final Uint8List _birthMark;
-  final Uint8List _bytes;
-  Key(this._birthMark, this._bytes, [this.isArmored = false]) {
+  Key(this._birthMark, Uint8List bytes, [this.isArmored = false])
+      : super(bytes) {
     ArgumentError.checkNotNull(_birthMark, 'birthMark');
-    ArgumentError.checkNotNull(_bytes, 'bytes');
     isArmored = isArmored ?? false;
   }
 
@@ -21,6 +20,8 @@ abstract class Key {
   }
 
   String get boundary;
+  Uint8List get _bytes => super.extract;
+  @override
   Uint8List get extract => _deArmored();
   Uint8List get parent => _birthMark;
   Uint8List get _secureBytes => ((!_secureOnly) || (_secureOnly && isArmored))
@@ -40,9 +41,9 @@ abstract class Key {
     }
   }
 
+  // TODO: implementation of de-armored
   Uint8List _deArmored() {
     if (isArmored) {
-      // TODO: implementation of de-armored
       return (null == _passPhrase)
           ? _bytes // throw
           : _bytes;
@@ -50,9 +51,9 @@ abstract class Key {
     return _bytes;
   }
 
-  static String encodeString(Uint8List value) => value.encodeString();
-  static Uint8List decodeString(String value) => value.encodeBytes();
-  static String encodeHex(Uint8List value) => value.encodeHexString();
+  static String encodeString(Uint8List value) => value.encodedString();
+  static Uint8List decodeString(String value) => value.encodedBytes();
+  static String encodeHex(Uint8List value) => value.encodeByteHexString();
   static Uint8List decodeHex(String value) => value.encodeHexBytes();
 
   static String _withBoundary(Uint8List value, String boundary) {
@@ -129,6 +130,11 @@ class PublicKey extends Key {
 }
 
 class PrivateKey extends PublicKey {
+  static final List<int> supportedLength =
+      List<int>.generate(5, (index) => pow(2, 8 + index));
+  static String get _unsupportedMessage => 'Key length not supported. '
+      'Must be one of ${supportedLength.join(', ')}';
+
   PrivateKey(Uint8List birthMark, Uint8List bytes, [bool isArmored])
       : super(birthMark, bytes, isArmored);
 
@@ -137,8 +143,12 @@ class PrivateKey extends PublicKey {
     return PrivateKey(map['birthMark'], map['key'], map['isArmored']);
   }
 
-  factory PrivateKey.random(Uint8List birthMark, int length) =>
-      PrivateKey(birthMark, randomBytes(length));
+  factory PrivateKey.random(Uint8List birthMark, int bitsLength) {
+    if (supportedLength.any((element) => element == bitsLength)) {
+      return PrivateKey(birthMark, randomBytes(bitsLength ~/ 8));
+    }
+    throw ArgumentError.value(bitsLength, 'bitsLength', _unsupportedMessage);
+  }
 
   // A placeholder static function to enable PrivateKey.armored().
   ///

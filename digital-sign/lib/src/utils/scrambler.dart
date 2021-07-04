@@ -4,9 +4,9 @@ extension StringScrambler on String {
   String scramble({int maxLength = 5, String extender = '...'}) {
     var value = '*** === ***';
     if (null != this) {
-      value = '$value. '
+      value = '$value.'
           '${this.reduce(maxLength: maxLength, extender: extender)}'
-          ' .$value';
+          '.$value';
     }
     return value;
   }
